@@ -18,6 +18,7 @@ class ComposerStaticInit5db39c4e147ade24c298ce22cc528b29
         array (
             'Symfony\\Polyfill\\Php80\\' => 23,
             'Src\\' => 4,
+            'Slim\\Views\\' => 11,
             'Slim\\Psr7\\' => 10,
             'Slim\\' => 5,
         ),
@@ -60,6 +61,10 @@ class ComposerStaticInit5db39c4e147ade24c298ce22cc528b29
         'Src\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',
+        ),
+        'Slim\\Views\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/slim/php-view/src',
         ),
         'Slim\\Psr7\\' => 
         array (

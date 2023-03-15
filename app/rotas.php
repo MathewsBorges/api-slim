@@ -4,15 +4,72 @@
     use Psr\Http\Message\ServerRequestInterface as Request;
     use Slim\Factory\AppFactory;
     use Slim\Routing\RouteCollectorProxy;
+    use Psr\Container\ContainerInterface;
+    use Src\Models\Pessoa;
+    use Src\Controllers;
 
-    use Src\Controllers\Pessoa;
+    
+    use Srs\Views;
+    use DI\Container;
+
+
+    $viewPath ='../views/login.php';
+    use Slim\Views\PhpRenderer;
+
+   
+
+    // $container = $app->getContainer(); 
+    // $view = $container->get('view');
 
 // ----------------------- Início de exemplo de CRIAÇÃO de rotas ---------------------------------------
     // Método GET na rota Home
     $app->get('/', function (Request $request, Response $response, $args) {
-        $response->getBody()->write("Hello world!");
-        return $response;
+    
+        $renderer = new PhpRenderer('../src/views');
+        return $renderer->render($response, "login.php", $args);
+    
     });
+
+    $app->get('/registrar', function (Request $request, Response $response, $args) {
+    
+        $renderer = new PhpRenderer('../src/views');
+        return $renderer->render($response, "registrar.php", $args);
+    
+    });
+
+    $app->get('/menu', function (Request $request, Response $response, $args) {
+    
+        $renderer = new PhpRenderer('../src/views');
+        return $renderer->render($response, "menu.php", $args);
+    
+    });
+
+    
+    $app->get('/lista', function (Request $request, Response $response, $args) {
+    
+        $renderer = new PhpRenderer('../src/views');
+        return $renderer->render($response, "lista.php", $args);
+    
+    });
+
+    $app->get('/cadastrar', function (Request $request, Response $response, $args) {
+    
+        $renderer = new PhpRenderer('../src/views');
+        return $renderer->render($response, "cadastrar.php", $args);
+    
+    });
+ 
+
+    $app->get('/sair', function (Request $request, Response $response, $args) {
+    
+        $renderer = new PhpRenderer('../src/views');
+        LoginController::class . ':sair';
+        return $renderer->render($response, "login.php", $args);
+    
+    });
+
+
+
 
     // Buscar todos os alunos 
     $app->get('/aluno', function (Request $request, Response $response, $args) {
@@ -33,10 +90,10 @@
     // Rota aluno com o método POST. Insere um novo registro de aluno
     $app->post('/aluno', function(Request $request, Response $response, $args ){
         $alunoJson = $request->getbody()->__tostring();     // recupera o conteúdo json no corpo da REQUISIÇÃO
-        $alunoObj = json_decode($alunoJson);
+       // $alunoObj = json_decode($alunoJson);
         
         echo '<pre>';
-        var_dump($alunoObj);
+        var_dump($alunoJson);
         echo '</pre>';
 
         $response->getbody()->write('Bem vindo a rota ALUNO com o método POST');
@@ -118,6 +175,9 @@
     // Busca pessoa com ID opcional.     
     $app->get('/pessoa[/{id}]', Pessoa::class . ':getPessoa');
 
+
+
+
     $app->post('/pessoa', Pessoa::class . ':salvar');
     
     $app->get( '/pessoa/{id}/departamento', Pessoa::class . ':getDepartamento');
@@ -139,6 +199,17 @@
             return $response;
         });
     })->add($middleware1);
+
+
+
+    $app->POST('/login', function(Request $request, Response $response, $args ){
+        // $login = $request->getbody()->__tostring(); 
+        // $loginObj = json_decode($login);
+        echo json_encode($_POST);
+      //  return $response;
+     });
+ 
+
 
 
 ?>

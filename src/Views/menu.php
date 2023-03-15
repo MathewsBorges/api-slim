@@ -37,6 +37,9 @@
     li:active {
       color: aqua;
     }
+    li{
+      list-style: none;
+    }
   </style>
   <body>
     <div class="content">
@@ -47,7 +50,7 @@
               class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start"
             >
               <a
-                href="/"
+                href="/menu"
                 class="d-flex align-items-center my-2 my-lg-0 me-lg-auto text-info-emphasis text-decoration-none"
               >
                 <i class="fa-solid fa-bars-progress fa-2x me-4"></i>
@@ -58,27 +61,28 @@
                 class="nav menu-inner col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small"
               >
                 <li>
-                  <a href="menu.html" class="nav-link text-secondary active">
+                  <a href="menu.php" class="nav-link text-secondary active">
                     Inicio
                   </a>
                 </li>
                 <li>
-                  <a href="lista.html" class="nav-link text-white">
+                  <a href="/lista" class="nav-link text-white">
                     Lista de Produtos
                   </a>
                 </li>
                 <li>
-                  <a href="cadastrar.html" class="nav-link text-white">
+                  <a href="/cadastrar" class="nav-link text-white">
                     Cadastrar Produto
                   </a>
                 </li>
-                <li>
-                  <a href="index.html" class="nav-link text-danger">
+             
+              </ul>
+              <li>
+                  <a href="/sair" class="nav-link text-danger">
                     Sair
                     <i class="fa-solid fa-arrow-right-from-bracket"></i>
                   </a>
                 </li>
-              </ul>
             </div>
           </div>
         </div>
@@ -172,7 +176,7 @@
         </li>
 
         <li class="nav-item">
-          <a href="#" class="nav-link px-2 text-danger">Sair</a>
+          <a href="/" class="nav-link px-2 text-danger">Sair</a>
         </li>
       </ul>
     </footer>
@@ -182,7 +186,7 @@
       e.preventDefault();
 
       var href = $(this).attr("href");
-      if (href == "menu.html") {
+      if (href == "menu.php") {
         window.location.reload();
       } else {
         $("menu-inner a").each(function (index, elemente) {

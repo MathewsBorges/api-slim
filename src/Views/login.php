@@ -15,6 +15,8 @@
       integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
       crossorigin="anonymous"
     ></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+
 
     <title>Gerenciador de Produto</title>
   </head>
@@ -34,7 +36,7 @@
         class="col-md-4 p-4 d-flex justify-content-around align-items-center card shadow rounded-3"
       >
         <main class="form-signin w-100 m-auto bg">
-          <form>
+          <form id="formulario" >
             <h1>Gerenciar Produtos</h1>
             <hr />
 
@@ -44,7 +46,9 @@
               <input
                 type="email"
                 class="form-control"
-                id="floatingInput"
+                id="email"
+                name="email"
+
                 placeholder="name@example.com"
               />
               <label for="floatingInput">Email</label>
@@ -53,7 +57,8 @@
               <input
                 type="password"
                 class="form-control"
-                id="floatingPassword"
+                name="senha"
+                id="senha"
                 placeholder="Password"
               />
               <label for="floatingPassword">Senha</label>
@@ -61,11 +66,15 @@
             <button class="w-100 btn btn-lg btn-primary mt-4 mb-4" type="submit">
               Entrar
             </button>
-            <a href="registrar.html" class="text-decoration-none">Não possui conta? Faça seu Registro</a>
+            <a href="/registrar" class="text-decoration-none">Não possui conta? Faça seu Registro</a>
             <p class="mt-5 mb-3 text-muted">© 2023 Matheus N. Borges, Prog Web II</p>
           </form>
         </main>
       </div>
     </body>
   </body>
+
+  <script>
+
+  </script>
 </html>

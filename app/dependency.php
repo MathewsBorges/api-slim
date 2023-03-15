@@ -1,5 +1,5 @@
 <?php
-
+use Slim\Views\PhpRenderer;
 $container = $app->getContainer(); 
 
 $container->set('BDconexao', function ($c) {
@@ -20,5 +20,7 @@ $container->set('BDconexao', function ($c) {
         return null;
     }
 });
+
+
 
 ?>
