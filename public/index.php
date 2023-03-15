@@ -53,4 +53,9 @@
     require __DIR__ . '/../app/rotas.php';
 
     $app->run();
+    
 ?>
+
+
+
+
