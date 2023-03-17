@@ -1,12 +1,19 @@
 <?php
+
 namespace Src\Models;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Container\ContainerInterface;
+use Slim\Factory\AppFactory;
+use Slim\Routing\RouteCollectorProxy;
 
 
-class Pessoa{
+use Srs\Views;
+use DI\Container;
+
+class Pessoa
+{
     private $container;
 
     // constructor receives container instance
@@ -15,50 +22,116 @@ class Pessoa{
         $this->container = $container;
     }
 
-    public function getPessoa(Request $request, Response $response, $args) {
-        
+    public function getLogin($email, $senha)
+    {
+
+
         $con = $this->container->get('BDconexao');
-        
-        $query = "select * from pessoa";
+        $query = "select * from usuarios where email='$email' and senha='$senha'";
+        $stmt = $con->prepare($query);
+        $stmt->execute();
+        $dados = $stmt->fetch(\PDO::FETCH_ASSOC);
+        return $dados;
+    }
+
+
+    public function getUser()
+    {
+
+        $con = $this->container->get('BDconexao');
+        $query = "select * from usuarios";
         $stmt = $con->prepare($query);
         $stmt->execute();
         $dados = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-        
-        echo '<pre>';
-        print_r($dados);
-        echo '</pre>';
-        
-        // if( isset( $args['id'] ) )
-        // {
-        //     $id = $args['id'];
-        //     $response->getBody()->write("Bem vindo a rota de PESSOA com o id: " .$id . " Implementada em um controlador externo");
-        // }
-        // else
-        //     $response->getBody()->write("Bem vindo a rota de PESSOA Implementada em um controlador externo");
 
-        return $response;
+        return $dados;
     }
 
-    public function salvar(Request $request, Response $response, $args) {
-        $pessoaJson = $request->getbody()->__tostring();
-        $pessoaObj = json_decode($pessoaJson);
-        
-        $response->getBody()->write("Você enviou os seguintes chaves e valores:\n");
-        foreach ($pessoaObj as $key => $value) {
-            $response->getBody()->write( "Chave: " . $key . ", Valor: " . $value . "\n");
+    public function getUserByID($id)
+    {
+
+        $con = $this->container->get('BDconexao');
+        $query = "select * from usuarios where id=$id";
+        $stmt = $con->prepare($query);
+        $stmt->execute();
+        $dados = $stmt->fetch(\PDO::FETCH_ASSOC);
+        if ($dados != null) {
+            return $dados;
+        } else {
+            return "Usuario nao encontrado";
         }
-        return $response;
     }
 
-    public function getDepartamento(Request $request, Response $response, $args) {
-        $id = $args['id'];
-        // Aqui pegaremos um array estático, na sua aplicação você deve fazer as manipulações dos dados em um Banco de dados
-        $pessoaObj = ['nome' => 'Maria', 'idade' => 22, 'Sexo' => 'F', 'Departamento' => 'Sei lá'];
-        $pessoaJson = json_encode($pessoaObj);
-        $response->getBody()->write($pessoaJson);
-        return $response->withHeader('Content-type', 'application/json');   
-        // Content-Type diz para o client qual é o tipo de conteúdo que a resposta
-        //Veja o exemplo em: https://www.slimframework.com/docs/v4/objects/response.html#the-response-headers
+    public function insertUser($pessoaObj)
+    {
+        $dados = "";
+
+
+        $con = $this->container->get('BDconexao');
+
+        if (!empty($pessoaObj['nome']) && !empty($pessoaObj['email']) && !empty($pessoaObj['senha'])) {
+            $check = $this->getUserByEmail($pessoaObj['email']);
+
+            if (empty($check)) {
+                $query = "insert into usuarios (nome, email, senha) values (:nome, :email, :senha)";
+                $stmt = $con->prepare($query);
+                $stmt->bindValue(":nome", $pessoaObj['nome']);
+                $stmt->bindValue(":email", $pessoaObj['email']);
+                $stmt->bindValue(":senha", $pessoaObj['senha']);
+                $stmt->execute();
+                $dados = 'Usuario Adicionado Com Sucesso';
+            } else {
+                $dados = 'Email em Uso, nao foi possivel cadastrar';
+            }
+        } else {
+            $dados = 'Os parametros Nome, Email, Senha devem ser espeficidados';
+        }
+
+        return $dados;
+    }
+
+
+
+    public function getUserByEmail($email)
+    {
+
+        $con = $this->container->get('BDconexao');
+        $query = "select * from usuarios where email='$email'";
+        $stmt = $con->prepare($query);
+        $stmt->execute();
+        $dados = $stmt->fetch(\PDO::FETCH_ASSOC);
+        return $dados;
+    }
+
+
+    public function editUser($id, $pessoaObj)
+    {
+
+
+        if (!empty($pessoaObj['nome']) && !empty($pessoaObj['senha'])) {
+
+            $nome = $pessoaObj['nome'];
+            $senha = $pessoaObj['senha'];
+
+            $con = $this->container->get('BDconexao');
+            $query = "update usuarios set nome='$nome', senha='$senha' where id=$id";
+            $stmt = $con->prepare($query);
+            $stmt->execute();
+            $dados = 'Usuario Editado Com Sucesso';
+        } else {
+            $dados = 'Parametros Nome e senha devem ser especificados';
+        }
+
+        return $dados;
+    }
+
+    public function deleteUser($id)
+    {
+        $con = $this->container->get('BDconexao');
+        $query = "delete from usuarios where id=$id";
+        $stmt = $con->prepare($query);
+        $stmt->execute();
+        $dados = 'Usuario Deletado Com Sucesso';
+        return $dados;
     }
 }
-?>

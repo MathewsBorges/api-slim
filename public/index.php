@@ -1,61 +1,48 @@
 <?php
-    // use Psr\Http\Message\ResponseInterface as Response;
-    use Slim\Psr7\Response;
-    use Psr\Http\Message\ServerRequestInterface as Request;
-    use Slim\Factory\AppFactory;
-    use Slim\Routing\RouteCollectorProxy;
-    
-    use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
+// use Psr\Http\Message\ResponseInterface as Response;
+use Slim\Psr7\Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Slim\Factory\AppFactory;
+use Slim\Routing\RouteCollectorProxy;
 
-    use DI\Container;
+use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 
-    require __DIR__ . '/../vendor/autoload.php';
+use DI\Container;
 
-    // Create Container using PHP-DI
-    $container = new Container();
+require __DIR__ . '/../vendor/autoload.php';
 
-    // Set container to create App with on AppFactory
-    AppFactory::setContainer($container);
 
-    $app = AppFactory::create();
+$container = new Container();
 
-    $middleware1 = function (Request $request, RequestHandler $handler) { 
-        $responseOut = new Response();
-        $responseOut->getBody()->write("Antes Middleware 1- ");
-        
-        $response = $handler->handle($request);
 
-        $existingContent = (string) $response->getBody();
-    
-        $responseOut->getBody()->write($existingContent . " - Depois Middleware 1");
-    
-        return $responseOut;
-    };
+AppFactory::setContainer($container);
 
-    $middleware2 = function (Request $request, RequestHandler $handler) { 
-        $responseOut = new Response();
-        $responseOut->getBody()->write("Antes Middleware 2- ");
-        
-        $response = $handler->handle($request);
+$app = AppFactory::create();
 
-        $existingContent = (string) $response->getBody();
-    
-        $responseOut->getBody()->write($existingContent . " - Depois Middleware 2");
-    
-        return $responseOut;
-    };
 
-    // $app->add($middleware1);
-    // $app->add($middleware2);
+$middlewareAuthentication = function (Request $request, RequestHandler $handler) use ($container) {
+    $responseOut = new Response();
 
-    require __DIR__ . '/../app/settings.php';
-    require __DIR__ . '/../app/dependency.php';
-    require __DIR__ . '/../app/rotas.php';
+    if (isset($request->getHeader('token')[0])) {
+        if ($request->getHeader('token')[0] == $container->get('settings')['authentication']['token']) {
+            $response = $handler->handle($request);
+            $existingContent = (string) $response->getBody();
+            $responseOut->getBody()->write($existingContent);
+        } else {
+            $responseOut->getBody()->write("Token Inválido");
+        }
+    } else {
+        $responseOut->getBody()->write("Usuário não autenticado");
+    }
 
-    $app->run();
-    
-?>
+
+    return $responseOut;
+};
 
 
 
+require __DIR__ . '/../app/settings.php';
+require __DIR__ . '/../app/dependency.php';
+require __DIR__ . '/../app/rotas.php';
 
+$app->run();

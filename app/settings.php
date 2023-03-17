@@ -6,16 +6,16 @@ $container->set('settings', function () {
     return [
         "BancoDeDados" => 
             [
-                "dbname" => "ProgWebII",
+                "dbname" => "estoque",
                 "driver" => "pgsql",
                 "user"   =>  "postgres",
-                "password"  => "12345",
+                "password"  => "1234",
                 "host"  => "localhost"
             ],
         "authentication" => 
             [
                 "token" => "tokengeradocomsucesso",
-                "segundoParametro" => "ok"   
+               
             ]    
     ];
 });

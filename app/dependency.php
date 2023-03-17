@@ -21,6 +21,11 @@ $container->set('BDconexao', function ($c) {
     }
 });
 
-
+$container->set('token', function ($c) {
+    $configuracao = $c->get('settings')['authentication'];
+    $token = $configuracao['token'];
+    return $token;
+  
+});
 
 ?>
